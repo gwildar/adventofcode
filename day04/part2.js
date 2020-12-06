@@ -1,24 +1,24 @@
 #!/usr/bin/env node
 
+const fs = require("fs");
+const path = require("path");
+const { difference } = require(path.resolve(__dirname, "./utilty.js"));
 
-const fs = require('fs');
-const path = require('path');
-const { difference } = require(path.resolve(__dirname, './utilty.js'));
+const passports = fs.readFileSync(
+  path.resolve(__dirname, "./data.txt"),
+  "utf8"
+);
 
-const passports = fs.readFileSync(path.resolve(__dirname, './data.txt'), 'utf8')
+const keys = new Set(["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]);
 
-const keys = new Set(["byr","iyr","eyr","hgt","hcl","ecl","pid"]);
+const formatPassports = (passport) =>
+  passport.split(/\s/).reduce(createKeyValuePair, {});
 
-const formatPassports = (passport) =>  
-  passport.split(/\s/)
-          .reduce(createKeyValuePair, {})
-
-const createKeyValuePair = (acc ,attr) => {
+const createKeyValuePair = (acc, attr) => {
   const keyValue = /^([a-z]{3}):(.+)$/.exec(attr);
-  const values = {[keyValue[1]]: keyValue[2]};
-  return ({...acc, ...values});
-}
-
+  const values = { [keyValue[1]]: keyValue[2] };
+  return { ...acc, ...values };
+};
 
 const validator = {
   byr: (isValidBirth = (value) => {
@@ -39,7 +39,7 @@ const validator = {
     If cm, the number must be at least 150 and at most 193.
     If in, the number must be at least 59 and at most 76.
     */
-   return /^(1[5-8][0-9]cm|19[0-3]cm)|([5-6][0-9]in|7[0-6]in)$/.test(value)
+    return /^(1[5-8][0-9]cm|19[0-3]cm)|([5-6][0-9]in|7[0-6]in)$/.test(value);
   }),
   hcl: (value) => {
     // hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
@@ -53,28 +53,30 @@ const validator = {
     //pid (Passport ID) - a nine-digit number, including leading zeroes.
     return /^\d{9}$/.test(value);
   },
-  cid: () => true
+  cid: () => true,
 };
 
 const checkKeys = (passport) => {
-  const set = new Set(Object.keys(passport))
+  const set = new Set(Object.keys(passport));
   const diff = difference(keys, set);
   return diff.size === 0 ? true : false;
-}
+};
 
-const validPassportCount = (count, passport) =>  {
-  const test = Object.keys(passport).every(key => validator[key](passport[key]));
+const validPassportCount = (count, passport) => {
+  const test = Object.keys(passport).every((key) =>
+    validator[key](passport[key])
+  );
   if (test === true) {
-    count++
+    count++;
   }
   return count;
-}
+};
 
 const valid = passports
-                .split(/\n\n/)
-                .map(formatPassports)
-                .filter(checkKeys)
-                .reduce(validPassportCount, 0)
-            
+  .split(/\n\n/)
+  .map(formatPassports)
+  .filter(checkKeys)
+  .reduce(validPassportCount, 0);
+
 console.log(valid);
 //109

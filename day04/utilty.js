@@ -1,9 +1,9 @@
 function difference(setA, setB) {
-  let difference = new Set(setA)
+  let difference = new Set(setA);
   for (let elem of setB) {
-      difference.delete(elem)
+    difference.delete(elem);
   }
-  return difference
+  return difference;
 }
 
 exports.difference = difference;
