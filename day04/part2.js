@@ -21,26 +21,26 @@ const createKeyValuePair = (acc, attr) => {
 };
 
 const validator = {
-  byr: (isValidBirth = (value) => {
+  byr: (value) => {
     // byr (Birth Year) - four digits; at least 1920 and at most 2002.
     return /^(19[2-9]\d|200[0-2])$/.test(value);
-  }),
-  iyr: (isValidYear = (value) => {
+  },
+  iyr: (value) => {
     // iyr (Issue Year) - four digits; at least 2010 and at most 2020.
     return /^(20[1][0-9])|2020$/.test(value);
-  }),
-  eyr: (isValidExpiredYear = (value) => {
+  },
+  eyr: (value) => {
     //eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
     return /^(20[2][0-9])|2030$/.test(value);
-  }),
+  },
 
-  hgt: (isValidHeight = (value) => {
+  hgt: (value) => {
     /*hgt (Height) - a number followed by either cm or in:
     If cm, the number must be at least 150 and at most 193.
     If in, the number must be at least 59 and at most 76.
     */
     return /^(1[5-8][0-9]cm|19[0-3]cm)|([5-6][0-9]in|7[0-6]in)$/.test(value);
-  }),
+  },
   hcl: (value) => {
     // hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
     return /^#[\da-f]{6}$/.test(value);
